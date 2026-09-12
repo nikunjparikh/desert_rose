@@ -30,8 +30,9 @@ def load():
     df = pd.read_sql_query(SQL, conn, params=[int(time.time()) - DAYS * 86400])
     conn.close()
     df["t"] = pd.to_datetime(df["ts"], unit="s", utc=True).dt.tz_convert(TZ)
-    return df.pivot_table(index="t", columns="feed", values="value").resample("1h").mean()
-
+    newest = df["t"].max()
+    wide = df.pivot_table(index="t", columns="feed", values="value").resample("1h").mean()
+    return wide, newest
 
 def chart(wide):
     fig, ax = plt.subplots(figsize=(9, 3.2), dpi=110)
@@ -80,7 +81,7 @@ TEMPLATE = """<!DOCTYPE html>
 
 
 def main():
-    wide = load()
+    wide, newest  = load()
     m = latest(wide, "moisture-1")
 
     if m is None:
@@ -98,7 +99,6 @@ def main():
         cells += '<div><div class="n">{}</div><div class="l">{}</div></div>'.format(
             "-" if v is None else fmt.format(v), label)
 
-    newest = wide.dropna(how="all").index.max()
     mins = (pd.Timestamp.now(tz=TZ) - newest).total_seconds() / 60
     if mins < 90:
         age, acolor = "updated {:.0f} min ago".format(mins), "#666"
