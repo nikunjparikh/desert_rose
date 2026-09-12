@@ -27,6 +27,7 @@ WHERE ts >= ?
   AND NOT (feed IN ('humidity','moisture-1') AND (value < 0 OR value > 100))
   AND NOT (feed = 'temp'  AND (value < 0 OR value > 60))
   AND NOT (feed = 'light' AND (value < 0 OR value > 150000))
+    AND NOT (feed = 'moisture-raw-1' AND (value < 0 OR value > 4095))
 """
 
 st.set_page_config(page_title="Balcony", layout="wide")
@@ -126,7 +127,7 @@ raw = load(days)
 if raw.empty:
     st.warning("No readings in this window. Has puller.py run?")
     st.stop()
-wide = raw.resample(freq).mean()
+wide = raw.resample(freq).mean().drop(columns=["moisture-raw-1"], errors="ignore")
 
 st.subheader("Desert Rose, balcony")
 

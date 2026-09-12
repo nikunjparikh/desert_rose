@@ -6,7 +6,7 @@ import requests
 import config
 
 DB = "balcony.db"
-FEEDS = ["moisture-1", "light", "temp", "humidity"]
+FEEDS = ["moisture-1", "moisture-raw-1" , "light", "temp", "humidity"]
 BACKFILL_DAYS = 30  #adafruit free keeps 30 days, so nothing older exists
 WINDOW = 86400 #Pulling one day at a time, this is seconds
 

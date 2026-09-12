@@ -91,7 +91,7 @@ while True:
             print("bme280 init failed:", e)
     # Read each sensor on its own, so if one fails (loose cable, etc.)
     # we still keep the other one's reading for this cycle.
-    pct = None
+    pct = raw =  None
     try:
         pct, raw = moisture_pct()
         print("moisture {}% (raw {})".format(pct, raw))
@@ -116,6 +116,8 @@ while True:
             wdt.feed()
             if pct is not None:
                 push("moisture-1", pct)
+            if raw is not None:
+                push("moisture-raw-1", raw)
             if lux is not None:
                 push("light", lux)
             if temp is not None:
