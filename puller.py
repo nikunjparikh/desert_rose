@@ -69,6 +69,7 @@ def main():
     conn = sqlite3.connect(DB)
     conn.executescript(SCHEMA)
     now = int(time.time())
+    print("=== run at", datetime.fromtimestamp(now).isoformat(timespec="seconds"))
     for feed in FEEDS:
         n = sync(conn, feed, now)
         total = conn.execute(
