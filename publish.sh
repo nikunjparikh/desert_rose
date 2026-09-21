@@ -1,5 +1,5 @@
 #!/bin/zsh
-cd /Users/Nikunj/Desktop/Data/diy-iot/desert_rose || exit 1
+cd /Users/Nikunj/iot/desert_rose || exit 1
 PY=/Users/Nikunj/opt/anaconda3/envs/balcony/bin/python
 $PY puller.py || exit 1
 $PY report.py || exit 1
